@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Deep Blue Escape — Underwater Board Game Adventure</title>
+  <meta name="description" content="Race cute animated fishes through magical ocean regions to reach the legendary Golden Pearl in this beautiful, polished 2D board game.">
+  <link rel="stylesheet" href="styles.css?v=3">
+</head>
+<body>
+
+  <!-- Background Ambient Effects -->
+  <div class="bg-light-rays" id="light-rays"></div>
+
+  <!-- Ambient Ocean Floor decorations -->
+  <div id="ocean-floor-decor">
+    <!-- Left Seaweed & Coral Group -->
+    <svg class="ocean-decor-left" viewBox="0 0 150 400" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="kelpGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#1abc9c" stop-opacity="0.35"/>
+          <stop offset="100%" stop-color="#16a085" stop-opacity="0.15"/>
+        </linearGradient>
+        <linearGradient id="coralGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+          <stop offset="0%" stop-color="#e84393" stop-opacity="0.3"/>
+          <stop offset="100%" stop-color="#ff7675" stop-opacity="0.1"/>
+        </linearGradient>
+      </defs>
+      <!-- Swaying Seaweed stalks -->
+      <path class="decor-sway-slow" d="M 30,400 C 15,300 45,200 20,100 C 5,50 35,0 35,0 C 35,0 55,50 40,100 C 25,200 55,300 40,400 Z" fill="url(#kelpGrad)"/>
+      <path class="decor-sway-fast" d="M 70,400 C 55,320 80,240 60,160 C 45,100 65,40 65,40 C 65,40 80,100 75,160 C 70,240 95,320 80,400 Z" fill="url(#kelpGrad)"/>
+      <!-- Corals -->
+      <path d="M 0,400 C 10,380 20,380 30,400 M 15,390 C 25,370 30,350 25,330 C 20,310 35,290 35,290 C 35,290 45,310 35,330 C 25,350 35,370 25,390 Z" fill="url(#coralGrad)"/>
+    </svg>
+    <!-- Right Seaweed & Coral Group -->
+    <svg class="ocean-decor-right" viewBox="0 0 150 400" xmlns="http://www.w3.org/2000/svg">
+      <!-- Swaying Seaweed stalks -->
+      <path class="decor-sway-mid" d="M 120,400 C 135,300 105,200 130,100 C 145,50 115,0 115,0 C 115,0 95,50 110,100 C 125,200 95,300 110,400 Z" fill="url(#kelpGrad)"/>
+      <path class="decor-sway-slow" d="M 80,400 C 95,320 70,240 90,160 C 105,100 85,40 85,40 C 85,40 70,100 75,160 C 80,240 55,320 70,400 Z" fill="url(#kelpGrad)"/>
+      <!-- Corals -->
+      <path d="M 150,400 C 140,380 130,380 120,400 M 135,390 C 125,370 120,350 125,330 C 130,310 115,290 115,290 C 115,290 105,310 115,330 C 125,350 115,370 125,390 Z" fill="url(#coralGrad)"/>
+    </svg>
+  </div>
+
+  <div id="app-container">
+    
+    <!-- 1. MAIN MENU SCREEN -->
+    <div id="main-menu-screen" class="screen active">
+      <div class="logo-container">
+        <h1>Deep Blue Escape</h1>
+        <p>Underwater Board Game Adventure</p>
+      </div>
+
+      <div class="menu-buttons">
+        <button id="btn-singleplayer" class="btn-glass accent">
+          <span>🐟 Single Player (vs AI)</span>
+        </button>
+        <button id="btn-multiplayer" class="btn-glass">
+          <span>👥 Local 2 Players</span>
+        </button>
+        <button id="btn-settings" class="btn-glass">
+          <span>⚙️ Sound & Settings</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- 2. GAMEPLAY SCREEN -->
+    <div id="game-screen" class="screen">
+      
+      <!-- Left side panel: HUD & Logs -->
+      <div class="side-panel">
+        
+        <!-- Game HUD Panel -->
+        <div class="glass-panel">
+          <div class="panel-title">Race Standings</div>
+          <div class="players-status">
+            <!-- Player 1 Status Card -->
+            <div class="player-card active" id="p1-card">
+              <div class="player-fish-icon">
+                <!-- Inline simple orange fish vector -->
+                <svg viewBox="0 0 100 100" width="36" height="36">
+                  <ellipse cx="50" cy="50" rx="35" ry="25" fill="#ff6b6b"/>
+                  <polygon points="15,50 3,35 7,50 3,65" fill="#ff6b6b"/>
+                  <circle cx="70" cy="42" r="5" fill="#0f1c3f"/>
+                  <circle cx="72" cy="40" r="1.5" fill="#fff"/>
+                </svg>
+              </div>
+              <div class="player-details">
+                <div class="player-name" id="p1-name">Clownfish (P1)</div>
+                <div class="player-status-line">
+                  <span id="p1-pos">Tile: 1</span>
+                  <span id="p1-status"><span class="sleep-badge">Sleeping</span></span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Player 2 / AI Status Card -->
+            <div class="player-card" id="p2-card">
+              <div class="player-fish-icon">
+                <!-- Inline simple blue fish vector -->
+                <svg viewBox="0 0 100 100" width="36" height="36">
+                  <ellipse cx="50" cy="50" rx="35" ry="25" fill="#00f2fe"/>
+                  <polygon points="15,50 3,35 7,50 3,65" fill="#00f2fe"/>
+                  <circle cx="70" cy="42" r="5" fill="#0f1c3f"/>
+                  <circle cx="72" cy="40" r="1.5" fill="#fff"/>
+                </svg>
+              </div>
+              <div class="player-details">
+                <div class="player-name" id="p2-name">Otto AI</div>
+                <div class="player-status-line">
+                  <span id="p2-pos">Tile: 1</span>
+                  <span id="p2-status"><span class="sleep-badge">Sleeping</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Shell Dice & Controls Panel -->
+        <div class="glass-panel dice-panel">
+          <div class="panel-title">Magical Shell Dice</div>
+          
+          <div class="shell-dice-wrapper" id="shell-dice-trigger">
+            <!-- Scallop Shell vector design -->
+            <div class="shell-dice">
+              <svg class="shell-dice-svg" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                  <radialGradient id="shellGrad" cx="50%" cy="80%" r="70%">
+                    <stop offset="0%" stop-color="#ffffff" />
+                    <stop offset="60%" stop-color="#4facfe" />
+                    <stop offset="100%" stop-color="#00f2fe" />
+                  </radialGradient>
+                  <radialGradient id="pearlGrad" cx="30%" cy="30%" r="70%">
+                    <stop offset="0%" stop-color="#ffffff"/>
+                    <stop offset="40%" stop-color="#fff8e7"/>
+                    <stop offset="70%" stop-color="#ffd3b6"/>
+                    <stop offset="100%" stop-color="#e2a87f"/>
+                  </radialGradient>
+                  <filter id="glow">
+                    <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+                    <feMerge>
+                      <feMergeNode in="coloredBlur"/>
+                      <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                  </filter>
+                </defs>
+                <path d="M 50,90 
+                         C 20,80  5,50  15,20 
+                         C 25,10  75,10  85,20 
+                         C 95,50  80,80  50,90 Z" 
+                      fill="url(#shellGrad)" filter="url(#glow)" stroke="rgba(255, 255, 255, 0.4)" stroke-width="2"/>
+                <path d="M 50,90 C 40,65 30,30 20,16" fill="none" stroke="rgba(255, 255, 255, 0.3)" stroke-width="1.5"/>
+                <path d="M 50,90 C 45,65 40,30 35,12" fill="none" stroke="rgba(255, 255, 255, 0.3)" stroke-width="1.5"/>
+                <path d="M 50,90 C 50,65 50,30 50,10" fill="none" stroke="rgba(255, 255, 255, 0.3)" stroke-width="1.5"/>
+                <path d="M 50,90 C 55,65 60,30 65,12" fill="none" stroke="rgba(255, 255, 255, 0.3)" stroke-width="1.5"/>
+                <path d="M 50,90 C 60,65 70,30 80,16" fill="none" stroke="rgba(255, 255, 255, 0.3)" stroke-width="1.5"/>
+                <!-- Glowing Shell Pearl -->
+                <circle cx="50" cy="55" r="9" fill="url(#pearlGrad)" stroke="rgba(255, 255, 255, 0.7)" stroke-width="1.5" filter="url(#glow)"/>
+              </svg>
+              <div class="shell-dice-number" id="dice-number-display">🐚</div>
+            </div>
+          </div>
+          
+          <div class="roll-prompt">Click shell to roll</div>
+        </div>
+
+        <!-- Logs Panel -->
+        <div class="glass-panel" style="display:flex; flex-direction:column; flex-grow:1;">
+          <div class="panel-title">Ocean Chronicles</div>
+          <div class="game-logs" id="log-box"></div>
+        </div>
+
+        <button id="btn-exit-game" class="btn-glass" style="margin-top:auto;">
+          <span>🚪 Exit to Menu</span>
+        </button>
+
+      </div>
+
+      <!-- Center Board Screen -->
+      <div class="board-container">
+        <div id="board-wrapper">
+          <div id="board-grid"></div>
+          <canvas id="fish-canvas"></canvas>
+        </div>
+
+        <!-- Obstacle/Reward popups -->
+        <div class="game-alert-overlay" id="game-alert">
+          <div class="alert-card">
+            <div class="alert-icon" id="alert-icon">🌀</div>
+            <div class="alert-title" id="alert-title">Whirlpool!</div>
+            <div class="alert-desc" id="alert-desc">You got pulled into a deep ocean drift and slipped backward.</div>
+            <button id="btn-alert-ok" class="btn-glass accent" style="width: 100%;">Okay</button>
+          </div>
+        </div>
+
+        <!-- Victory Banner Overlay -->
+        <div id="victory-overlay">
+          <div class="victory-layout">
+            <!-- Left Column: Congratulations -->
+            <div class="victory-col victory-left-col">
+              <div class="victory-title">Victory!</div>
+              <div class="victory-subtitle">🎉 Congratulations! 🥳</div>
+              <div class="victory-desc" id="victory-msg">Clownfish (P1) reached the Golden Pearl and won the game!</div>
+            </div>
+
+            <!-- Center Column: Open Shell and Golden Pearl -->
+            <div class="victory-col victory-center-col">
+              <svg class="victory-pearl-shell" viewBox="0 0 100 100">
+                <defs>
+                  <radialGradient id="goldPearlGrad" cx="35%" cy="35%" r="65%">
+                    <stop offset="0%" stop-color="#ffffff"/>
+                    <stop offset="30%" stop-color="#fff275"/>
+                    <stop offset="70%" stop-color="#ffd32c"/>
+                    <stop offset="100%" stop-color="#e15f41"/>
+                  </radialGradient>
+                </defs>
+                <!-- Shell bottom half -->
+                <path d="M 50,85 C 25,80 15,55 22,35 C 29,20 71,20 78,35 C 85,55 75,80 50,85 Z" fill="url(#shellGrad)" filter="url(#glow)"/>
+                <!-- Golden Pearl -->
+                <circle cx="50" cy="55" r="14" fill="url(#goldPearlGrad)" filter="url(#glow)" stroke="#fff" stroke-width="2"/>
+                <!-- Shell top half (open) -->
+                <path d="M 50,30 C 25,35 12,2 50,10 C 88,2 75,35 50,30 Z" fill="url(#shellGrad)" filter="url(#glow)"/>
+              </svg>
+            </div>
+
+            <!-- Right Column: Game Highlights -->
+            <div class="victory-col victory-right-col">
+              <div class="highlight-card">
+                <h3>⭐ Game Highlights</h3>
+                <div class="highlight-stat">
+                  <span>Total Turns</span>
+                  <strong id="stat-turns">42</strong>
+                </div>
+                <div class="highlight-stat">
+                  <span>Biggest Roll</span>
+                  <strong id="stat-biggest-roll">6</strong>
+                </div>
+                <div class="highlight-stat">
+                  <span>Events Triggered</span>
+                  <strong id="stat-events">11</strong>
+                </div>
+                <div class="highlight-stat">
+                  <span>Obstacles Avoided</span>
+                  <strong id="stat-obstacles">7</strong>
+                </div>
+                <div class="highlight-stat">
+                  <span>Time Taken</span>
+                  <strong id="stat-time">08:24</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="victory-buttons">
+            <button id="btn-victory-restart" class="btn-glass accent">🔄 Play Again</button>
+            <button id="btn-victory-menu" class="btn-glass">🏠 Main Menu</button>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- 3. SOUND SETTINGS MODAL -->
+    <div id="settings-modal" class="modal">
+      <div class="modal-content">
+        <h2>Ocean Music & Sounds</h2>
+        
+        <div class="setting-group">
+          <label for="toggle-music">Ambient Background Music</label>
+          <label class="switch">
+            <input type="checkbox" id="toggle-music" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <div class="setting-group">
+          <label for="toggle-sfx">Water Sound Effects</label>
+          <label class="switch">
+            <input type="checkbox" id="toggle-sfx" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+
+        <button id="close-settings" class="btn-glass accent modal-close-btn">
+          <span>Apply and Close</span>
+        </button>
+      </div>
+    </div>
+
+  </div>
+
+  <script type="module" src="game.js?v=3"></script>
+</body>
+</html>
