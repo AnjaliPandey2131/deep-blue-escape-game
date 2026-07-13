@@ -208,60 +208,75 @@ export class GameBoard {
   update(deltaTime) {}
 
   draw() {
-    // Canvas sizing based on parent container
     const size = Math.min(this.canvas.parentElement.clientWidth, this.canvas.parentElement.clientHeight);
     this.ctx.clearRect(0, 0, size, size);
 
-    // 1. Draw connecting dotted path segment-by-segment using regional colors
+    // 1. Organic bubble-trail path (replaces plain dotted lines)
     this.ctx.save();
-    this.ctx.lineWidth = 2.0;
-    this.ctx.setLineDash([4, 4]);
     for (let i = 1; i < 100; i++) {
       const start = this.getTileCoords(i);
-      const end = this.getTileCoords(i + 1);
-      const reg = this.getRegion(i);
-      
-      this.ctx.strokeStyle = reg.color + "3d"; // ~24% opacity glowing color
-      this.ctx.beginPath();
-      this.ctx.moveTo(start.x, start.y);
-      this.ctx.lineTo(end.x, end.y);
-      this.ctx.stroke();
+      const end   = this.getTileCoords(i + 1);
+      // Scatter small circles along the segment instead of a stroke line
+      const dx = end.x - start.x;
+      const dy = end.y - start.y;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const steps = Math.max(2, Math.floor(dist / 9));
+      for (let s = 0; s <= steps; s++) {
+        const t = s / steps;
+        const bx = start.x + dx * t + (Math.random() - 0.5) * 2.5;
+        const by = start.y + dy * t + (Math.random() - 0.5) * 2.5;
+        // Alternate: bubble circle or tiny pebble (square-ish)
+        const r = s % 3 === 0 ? 1.5 : 0.9;
+        this.ctx.fillStyle = 'rgba(0, 210, 238, 0.14)';
+        this.ctx.beginPath();
+        this.ctx.arc(bx, by, r, 0, Math.PI * 2);
+        this.ctx.fill();
+      }
     }
     this.ctx.restore();
 
-    // 2. Draw movement curve overlays (Dolphin / Shark paths)
+    // 2. Muted movement curve overlays
     this.drawMovementCurves();
   }
 
   drawMovementCurves() {
     const ctx = this.ctx;
     ctx.save();
-    
+    ctx.setLineDash([3, 7]);
+
     for (const key in this.specialTiles) {
       const spec = this.specialTiles[key];
       if (spec.target) {
         const start = this.getTileCoords(parseInt(key));
-        const end = this.getTileCoords(spec.target);
-        
+        const end   = this.getTileCoords(spec.target);
+
+        // Desaturated, thin, semi-transparent ocean-blue paths
         const isGood = spec.type === 'dolphin' || spec.type === 'turtle';
-        ctx.strokeStyle = isGood ? "rgba(46, 204, 113, 0.35)" : "rgba(231, 76, 60, 0.35)";
-        ctx.lineWidth = 3;
-        
+        ctx.strokeStyle = isGood
+          ? 'rgba(90, 210, 175, 0.18)'
+          : 'rgba(70, 145, 200, 0.16)';
+        ctx.lineWidth = 1.4;
+
+        const midX = (start.x + end.x) / 2;
+        const midY = (start.y + end.y) / 2 - 22;
         ctx.beginPath();
         ctx.moveTo(start.x, start.y);
-        
-        const midX = (start.x + end.x) / 2;
-        const midY = (start.y + end.y) / 2 - 25; // arc slightly up
         ctx.quadraticCurveTo(midX, midY, end.x, end.y);
         ctx.stroke();
 
-        ctx.fillStyle = ctx.strokeStyle;
+        // Tiny destination dot
+        ctx.setLineDash([]);
+        ctx.fillStyle = isGood
+          ? 'rgba(90, 210, 175, 0.28)'
+          : 'rgba(70, 145, 200, 0.25)';
         ctx.beginPath();
-        ctx.arc(end.x, end.y, 4, 0, Math.PI * 2);
+        ctx.arc(end.x, end.y, 2.2, 0, Math.PI * 2);
         ctx.fill();
+        ctx.setLineDash([3, 7]);
       }
     }
-    
+
+    ctx.setLineDash([]);
     ctx.restore();
   }
 }

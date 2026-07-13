@@ -1,6 +1,7 @@
 // Sea-Shell Dice Module
 
-import { audio } from './audio.js?v=3';
+import { audio } from './audio.js?v=6';
+
 
 export class ShellDice {
   constructor(diceContainerId, numberDisplayId, onRollComplete) {

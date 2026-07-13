@@ -5,12 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Deep Blue Escape — Underwater Board Game Adventure</title>
   <meta name="description" content="Race cute animated fishes through magical ocean regions to reach the legendary Golden Pearl in this beautiful, polished 2D board game.">
-  <link rel="stylesheet" href="styles.css?v=3">
+  <link rel="stylesheet" href="styles.css?v=6">
 </head>
 <body>
 
-  <!-- Background Ambient Effects -->
-  <div class="bg-light-rays" id="light-rays"></div>
+  <!-- Full-Screen Ambient Ocean Canvas (behind all UI) -->
+  <canvas id="ocean-bg-canvas"></canvas>
 
   <!-- Ambient Ocean Floor decorations -->
   <div id="ocean-floor-decor">
@@ -61,6 +61,187 @@
         <button id="btn-settings" class="btn-glass">
           <span>⚙️ Sound & Settings</span>
         </button>
+        <button id="btn-rules" class="btn-glass">
+          <span>📖 How to Play</span>
+        </button>
+        <button id="btn-about" class="btn-glass">
+          <span>ℹ️ About</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- RULES OVERLAY -->
+    <div id="rules-overlay" class="info-overlay" role="dialog" aria-label="How to Play">
+      <div class="info-scroll">
+        <!-- Bubble decorations -->
+        <div class="scroll-bubbles" aria-hidden="true">
+          <span class="sb sb1"></span><span class="sb sb2"></span><span class="sb sb3"></span>
+          <span class="sb sb4"></span><span class="sb sb5"></span><span class="sb sb6"></span>
+        </div>
+
+        <div class="scroll-header">
+          <div class="scroll-seal">🐚</div>
+          <h2>How to Play</h2>
+          <p class="scroll-sub">Deep Blue Escape — A Magical Ocean Adventure</p>
+        </div>
+
+        <div class="rules-cards">
+
+          <div class="rule-card">
+            <div class="rule-card-icon">🐚</div>
+            <h3>Welcome</h3>
+            <p>Race through the magical ocean, overcome underwater challenges, grow stronger, and be the first fish to reach the legendary <strong>Golden Pearl</strong>.</p>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-card-icon">🏆</div>
+            <h3>Goal</h3>
+            <p>Reach <strong>Tile 100</strong> and collect the Golden Pearl before the other player.</p>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-card-icon">😴</div>
+            <h3>Unlocking Your Fish</h3>
+            <p>Your fish begins <strong>sleeping</strong>. Roll a <strong>3</strong> to wake it up. Only then does your journey begin.</p>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-card-icon">🎲</div>
+            <h3>Rolling the Magical Shell</h3>
+            <p>Click the <strong>Magical Shell</strong>. The number shown decides how many tiles your fish swims forward.</p>
+          </div>
+
+          <div class="rule-card wide">
+            <div class="rule-card-icon">🌊</div>
+            <h3>Ocean Events</h3>
+            <p>The ocean is alive. During your journey you may encounter:</p>
+            <div class="event-grid">
+              <span>🦈 Shark</span>
+              <span>🦀 Crab</span>
+              <span>🪸 Coral Trap</span>
+              <span>🌀 Whirlpool</span>
+              <span>🌋 Volcano</span>
+              <span>⚡ Jellyfish</span>
+              <span>🌊 Ocean Current</span>
+              <span>🪨 Rocks</span>
+              <span>🐬 Dolphin</span>
+            </div>
+            <p class="rule-note">Some events help you. Others slow you down. All of them look spectacular.</p>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-card-icon">🐠</div>
+            <h3>Fish Growth</h3>
+            <p>Land on special reward tiles to grow stronger:</p>
+            <div class="stage-chain">
+              <span>🐠 Tiny</span><span class="arrow">↓</span>
+              <span>🐟 Small</span><span class="arrow">↓</span>
+              <span>🐡 Large</span><span class="arrow">↓</span>
+              <span>👑 Giant</span>
+            </div>
+            <p class="rule-note">Growth is triggered by: 🐬 Dolphin · 🌟 Starfish · 🪨 Pearl · 💎 Treasure Chest</p>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-card-icon">🦀</div>
+            <h3>Shrinking</h3>
+            <p>Two dangers shrink your fish by one level:</p>
+            <div class="shrink-list">
+              <span>🦀 Crab Pinch</span>
+              <span>🦈 Shark Encounter</span>
+            </div>
+            <p class="rule-note">Tiny fish cannot shrink further — they just wobble!</p>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-card-icon">🐟</div>
+            <h3>Tail Whack</h3>
+            <p>When two fish land on the same tile, the <strong>larger fish</strong> performs a playful Tail Whack — pushing the smaller fish backward.</p>
+            <div class="push-table">
+              <div><span class="push-match">Small → Tiny</span><span class="push-val">3 tiles</span></div>
+              <div><span class="push-match">Large → Tiny</span><span class="push-val">5 tiles</span></div>
+              <div><span class="push-match">Giant → Tiny</span><span class="push-val">10 tiles</span></div>
+              <div><span class="push-match">Large → Small</span><span class="push-val">3 tiles</span></div>
+              <div><span class="push-match">Giant → Small</span><span class="push-val">5 tiles</span></div>
+              <div><span class="push-match">Giant → Large</span><span class="push-val">3 tiles</span></div>
+            </div>
+            <p class="rule-note">Same size? Funny bump — nobody moves!</p>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-card-icon">🎬</div>
+            <h3>Cinematic Events</h3>
+            <p>Special encounters play as beautiful animated scenes. You can watch or skip after the first moment. First encounters always play in full.</p>
+          </div>
+
+          <div class="rule-card accent-card">
+            <div class="rule-card-icon">🏆</div>
+            <h3>Winning</h3>
+            <p>The first fish to reach the <strong>Golden Pearl</strong> wins the adventure! Good luck, little fish! 🐟✨</p>
+          </div>
+
+        </div><!-- /rules-cards -->
+
+        <div class="scroll-footer">
+          <button id="btn-close-rules" class="btn-glass accent scroll-close-btn">🐚 Back to Menu</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ABOUT OVERLAY -->
+    <div id="about-overlay" class="info-overlay" role="dialog" aria-label="About">
+      <div class="info-scroll">
+        <!-- Bubble decorations -->
+        <div class="scroll-bubbles" aria-hidden="true">
+          <span class="sb sb1"></span><span class="sb sb2"></span><span class="sb sb3"></span>
+          <span class="sb sb4"></span><span class="sb sb5"></span><span class="sb sb6"></span>
+        </div>
+
+        <div class="scroll-header">
+          <div class="scroll-seal">🌊</div>
+          <h2>About</h2>
+          <p class="scroll-sub">Deep Blue Escape</p>
+        </div>
+
+        <div class="rules-cards">
+
+          <div class="rule-card accent-card">
+            <div class="rule-card-icon">🌊</div>
+            <h3>Deep Blue Escape</h3>
+            <p class="about-tagline">"A cheerful underwater adventure where every journey through the ocean creates a new story."</p>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-card-icon">🎮</div>
+            <h3>Game Info</h3>
+            <div class="about-info">
+              <div><span class="ai-label">Version</span><span class="ai-val">1.5 — Fish Evolution & Tail Whack</span></div>
+              <div><span class="ai-label">Genre</span><span class="ai-val">Underwater Board Game Adventure</span></div>
+              <div><span class="ai-label">Players</span><span class="ai-val">1–2 (Single Player vs AI or Local Multiplayer)</span></div>
+            </div>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-card-icon">👩‍💻</div>
+            <h3>Credits</h3>
+            <div class="about-info">
+              <div><span class="ai-label">Developed by</span><span class="ai-val">Anjali Pandey</span></div>
+              <div><span class="ai-label">Art & Design</span><span class="ai-val">Anjali Pandey</span></div>
+              <div><span class="ai-label">Audio</span><span class="ai-val">Procedural Web Audio API</span></div>
+            </div>
+          </div>
+
+          <div class="rule-card">
+            <div class="rule-card-icon">✨</div>
+            <h3>Thank You!</h3>
+            <p>Thank you for diving into Deep Blue Escape. May your fish grow mighty, your rolls be lucky, and the Golden Pearl always be within reach. 🐟💎</p>
+          </div>
+
+        </div>
+
+        <div class="scroll-footer">
+          <button id="btn-close-about" class="btn-glass accent scroll-close-btn">🐚 Back to Menu</button>
+        </div>
       </div>
     </div>
 
@@ -86,7 +267,10 @@
                 </svg>
               </div>
               <div class="player-details">
-                <div class="player-name" id="p1-name">Clownfish (P1)</div>
+                <div class="player-name">
+                  <span id="p1-name">Clownfish (P1)</span>
+                  <span id="p1-stage" class="stage-badge">🐠</span>
+                </div>
                 <div class="player-status-line">
                   <span id="p1-pos">Tile: 1</span>
                   <span id="p1-status"><span class="sleep-badge">Sleeping</span></span>
@@ -106,7 +290,10 @@
                 </svg>
               </div>
               <div class="player-details">
-                <div class="player-name" id="p2-name">Otto AI</div>
+                <div class="player-name">
+                  <span id="p2-name">Otto AI</span>
+                  <span id="p2-stage" class="stage-badge">🐠</span>
+                </div>
                 <div class="player-status-line">
                   <span id="p2-pos">Tile: 1</span>
                   <span id="p2-status"><span class="sleep-badge">Sleeping</span></span>
@@ -290,6 +477,46 @@
 
   </div>
 
-  <script type="module" src="game.js?v=3"></script>
+  <!-- Evolution Banner (centered over gameplay) -->
+  <div id="evo-banner" class="evo-banner"></div>
+
+  <script type="module" src="game.js?v=6"></script>
+
+  <!-- Rules & About panel controller (lightweight, standalone) -->
+  <script>
+    (function () {
+      function openPanel(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.classList.add('active');
+        // Reset scroll to top every time
+        const scroll = el.querySelector('.info-scroll');
+        if (scroll) scroll.scrollTop = 0;
+      }
+      function closePanel(id) {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.classList.add('closing');
+        el.addEventListener('animationend', function handler() {
+          el.classList.remove('active', 'closing');
+          el.removeEventListener('animationend', handler);
+        });
+      }
+
+      document.addEventListener('DOMContentLoaded', function () {
+        document.getElementById('btn-rules')?.addEventListener('click', () => openPanel('rules-overlay'));
+        document.getElementById('btn-about')?.addEventListener('click', () => openPanel('about-overlay'));
+        document.getElementById('btn-close-rules')?.addEventListener('click', () => closePanel('rules-overlay'));
+        document.getElementById('btn-close-about')?.addEventListener('click', () => closePanel('about-overlay'));
+
+        // Click backdrop to close
+        ['rules-overlay', 'about-overlay'].forEach(id => {
+          document.getElementById(id)?.addEventListener('click', function (e) {
+            if (e.target === this) closePanel(id);
+          });
+        });
+      });
+    })();
+  </script>
 </body>
 </html>
